@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klaim Freebet Berhadiah</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Konfigurasi Tailwind untuk warna kustom premium -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-primary': '#0b0f14',
+                        'neon-emerald': '#14b8a6', // Neon Emerald
+                        'gold-accent': '#f5d27a',
+                        'neon-cyan': '#06b6d4', // Neon Cyan
+                    },
+                    boxShadow: {
+                        'neon-emerald': '0 0 10px #14b8a6, 0 0 20px #14b8a6, 0 0 40px rgba(20, 184, 166, 0.5)',
+                        'gold-glow': '0 0 5px #f5d27a, 0 0 10px rgba(245, 210, 122, 0.7)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Roboto Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Tambahkan Inter dan Roboto Mono font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto+Mono:wght=700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Kustom & Animasi */
+        body {
+            /* Background gradient lembut untuk lapisan bawah */
+            background-color: #0b0f14;
+            background-image: linear-gradient(135deg, rgba(11, 15, 20, 1) 0%, rgba(11, 15, 20, 0.9) 50%, rgba(20, 184, 166, 0.05) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            color: #e2e8f0;
+        }
+
+        /* Animasi Body Gradient */
+        @keyframes subtleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .animated-bg {
+            background-size: 400% 400%;
+            animation: subtleGradient 20s ease infinite;
+        }
+
+        /* Canvas Particle Grid di belakang konten */
+        #particle-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none; 
+        }
+
+        /* Glassmorphism card dengan border gradient */
+        .glass-card {
+            background-color: rgba(17, 24, 39, 0.7); /* dark-blue-900 with transparency */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid; 
+            /* Border gradient */
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, #14b8a6, #06b6d4, #14b8a6);
+        }
+        
+        /* Animasi Shake untuk validasi error */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .shake-error {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            border-color: #ef4444 !important; /* red-500 */
+        }
+        
+        /* Neon Headline Shadow */
+        .neon-headline {
+            text-shadow: 0 0 7px #14b8a6, 0 0 15px rgba(20, 184, 166, 0.7);
+        }
+
+        /* Pulse untuk Button KONFIRMASI */
+        .pulse-neon {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; box-shadow: 0 0 7px #14b8a6, 0 0 15px #14b8a6; }
+          50% { opacity: 0.7; box-shadow: 0 0 10px #06b6d4, 0 0 20px #06b6d4; }
+        }
+        
+        /* Modal Animation (Fade + Scale) */
+        .modal-enter-active, .modal-leave-active {
+            transition: all 0.3s ease;
+        }
+        .modal-leave-to {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        
+        /* Kode display style */
+        .code-display {
+            letter-spacing: 2px;
+            font-size: 1.5rem; 
+            color: #f5d27a; /* Gold Accent */
+            text-shadow: 0 0 5px #f5d27a, 0 0 10px rgba(245, 210, 122, 0.7);
+        }
+
+    </style>
+</head>
+<body class="animated-bg">
+
+    <!-- Canvas Particle Grid -->
+    <canvas id="particle-grid"></canvas>
+
+    <!-- Main Content Area -->
+    <div id="app" class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        
+        <!-- Glassmorphism Form Card -->
+        <div class="glass-card w-full max-w-sm md:max-w-md p-6 sm:p-8 rounded-2xl shadow-2xl shadow-dark-primary/70">
+            
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gold-accent mb-2 neon-headline text-center">
+                KLAIM FREEBET BERHADIAH SEKARANG 💎
+            </h1>
+            <p class="text-sm text-gray-300/80 mb-6 border-l-4 border-neon-emerald pl-3 italic">
+                Isi data singkat, nikmati sensasi freebet tanpa ribet.
+            </p>
+
+            <form id="freebet-form" class="space-y-4">
+                
+                <!-- Nama Input -->
+                <div>
+                    <label for="nama" class="block text-sm font-medium text-neon-emerald mb-1">MASUKAN NAMA</label>
+                    <input type="text" id="nama" name="nama" placeholder="Nama lengkap kamu" minlength="3" required class="w-full px-4 py-3 rounded-xl bg-dark-primary/80 border-2 border-neon-cyan/30 text-white placeholder-gray-500 focus:ring-neon-emerald focus:border-neon-emerald transition duration-200">
+                    <p id="nama-error" class="text-xs text-red-400 mt-1 hidden">Nama minimal 3 huruf.</p>
+                </div>
+                
+                <!-- Nomor WA Input -->
+                <div>
+                    <label for="wa" class="block text-sm font-medium text-neon-emerald mb-1">NOMOR WA</label>
+                    <input type="tel" id="wa" name="wa" placeholder="Contoh: 0859xxxxxxx" required class="w-full px-4 py-3 rounded-xl bg-dark-primary/80 border-2 border-neon-cyan/30 text-white placeholder-gray-500 focus:ring-neon-emerald focus:border-neon-emerald transition duration-200">
+                    <p id="wa-error" class="text-xs text-red-400 mt-1 hidden">Nomor WA harus 10-15 digit angka (diawali 0, 62, atau +62).</p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn" class="w-full py-3 mt-6 rounded-xl font-bold uppercase text-lg bg-neon-emerald text-dark-primary shadow-neon-emerald transition duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-neon-emerald/50 disabled:opacity-50 pulse-neon">
+                    <span id="btn-text">KONFIRMASI</span>
+                    <!-- Spinner SVG -->
+                    <svg id="btn-spinner" class="animate-spin h-5 w-5 text-dark-primary inline-block mr-2 hidden" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+            
+            <p class="text-center text-xs text-gray-500 mt-4">
+                Dibuat dengan ❤️ oleh PECUN 4D
+            </p>
+
+        </div>
+    </div>
+
+    <!-- Popup Modal KODE FREEBET -->
+    <div id="code-modal" class="fixed inset-0 z-50 bg-dark-primary/90 backdrop-blur-md flex items-center justify-center p-4 modal-leave-to" style="display: none;">
+        <div class="bg-dark-primary/95 border-2 border-gold-accent rounded-xl p-6 sm:p-8 w-full max-w-sm shadow-gold-glow modal-content">
+            
+            <h2 class="text-xl sm:text-2xl font-bold text-gold-accent mb-4 text-center">KODE FREEBET KAMU</h2>
+            
+            <div id="code-output" class="code-display font-mono font-extrabold text-center py-4 px-3 mb-6 rounded-lg select-all bg-dark-primary/50">
+                FB-XXXX-XXXX
+            </div>
+            
+            <div class="space-y-3">
+                <button id="copy-code-btn" class="w-full py-3 rounded-xl font-semibold bg-neon-cyan text-dark-primary hover:bg-neon-cyan/80 transition duration-200">
+                    Copy Kode
+                </button>
+                <button id="redirect-wa-btn" class="w-full py-3 rounded-xl font-semibold bg-neon-emerald text-dark-primary hover:bg-neon-emerald/80 transition duration-200">
+                    Chat WhatsApp Sekarang
+                </button>
+            </div>
+            
+            <p id="countdown-text" class="text-center text-xs text-gray-400 mt-4">Auto-redirect dalam 2 detik...</p>
+        </div>
+    </div>
+    
+    <!-- Toast Notification Area -->
+    <div id="toast-area" class="fixed bottom-4 right-4 z-50 space-y-2">
+        <!-- Toast akan di-inject di sini -->
+    </div>
+    
+
+    <!-- V A N I L L A J A V A S C R I P T -->
+    <script>
+        // --- KONFIGURASI GLOBAL ---
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzqdYNnafTBMGbpYU7eypsrey8SLhP0wO6xE8tJx70g9ta7ZDcDAUoBsbGHpHw4ZeK_/exec';
+        const WA_TARGET_NUMBER = '6285942050032';
+        const PARTICLE_COUNT = 70; // Partikel untuk animasi latar belakang
+
+        // --- DOM Elements ---
+        const form = document.getElementById('freebet-form');
+        const namaInput = document.getElementById('nama');
+        const waInput = document.getElementById('wa');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnSpinner = document.getElementById('btn-spinner');
+        const namaError = document.getElementById('nama-error');
+        const waError = document.getElementById('wa-error');
+        
+        const codeModal = document.getElementById('code-modal');
+        const codeOutput = document.getElementById('code-output');
+        const copyCodeBtn = document.getElementById('copy-code-btn');
+        const redirectWaBtn = document.getElementById('redirect-wa-btn');
+        const countdownText = document.getElementById('countdown-text');
+
+        // --- State ---
+        let generatedCode = '';
+        let timerId = null;
+
+        // --- Utility Functions ---
+
+        /**
+         * Menampilkan Toast Notifikasi (Success/Error)
+         */
+        function showToast(message, type) {
+            const toastArea = document.getElementById('toast-area');
+            const color = type === 'success' ? 'bg-green-600' : 'bg-red-600';
+            const shadow = type === 'success' ? 'shadow-green-500/50' : 'shadow-red-500/50';
+
+            const toast = document.createElement('div');
+            toast.className = `p-3 rounded-lg text-white font-semibold transition-opacity duration-300 ${color} shadow-xl ${shadow} opacity-0 max-w-xs`;
+            toast.textContent = message;
+            
+            toastArea.prepend(toast); 
+
+            setTimeout(() => toast.classList.remove('opacity-0'), 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000);
+        }
+
+        /**
+         * Menormalkan dan memvalidasi nomor WA (0... atau +62... ke 62...).
+         * @param {string} wa Nomor WA mentah.
+         * @returns {string | null} Nomor WA ter-normalisasi (62...) atau null jika invalid.
+         */
+        function normalizeAndValidateWa(wa) {
+            // Hapus semua non-digit kecuali 0 dan + (untuk +62)
+            let cleaned = wa.replace(/[^\d+]/g, ''); 
+            
+            // Hapus '+' jika ada
+            cleaned = cleaned.replace(/\+/g, '');
+            
+            // Validasi panjang
+            if (cleaned.length < 10 || cleaned.length > 15) {
+                return null;
+            }
+
+            // Normalisasi: 08... menjadi 628...
+            if (cleaned.startsWith('0')) {
+                cleaned = '62' + cleaned.substring(1);
+            }
+            // Normalisasi: +62... atau 62...
+            else if (cleaned.startsWith('62')) {
+                // Sudah 62, tidak perlu diubah
+            }
+            else {
+                // Format lain dianggap invalid
+                return null; 
+            }
+            
+            // Verifikasi akhir: harus 62xxxxxxxx
+            if (!cleaned.startsWith('62')) {
+                return null;
+            }
+
+            return cleaned;
+        }
+
+        /**
+         * Mengubah state button saat loading.
+         */
+        function setButtonLoading(isLoading) {
+            submitBtn.disabled = isLoading;
+            if (isLoading) {
+                btnText.classList.add('hidden');
+                btnSpinner.classList.remove('hidden');
+                submitBtn.classList.remove('pulse-neon');
+            } else {
+                btnText.classList.remove('hidden');
+                btnSpinner.classList.add('hidden');
+                submitBtn.classList.add('pulse-neon');
+            }
+        }
+
+        /**
+         * Menghasilkan kode Freebet random: FB-XXXX-XXXX.
+         */
+        function generateFreebetCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const segment = (length) => Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+            return `FB-${segment(4)}-${segment(4)}`;
+        }
+        
+        // --- Modal & Redirect Handlers ---
+
+        /**
+         * Tampilkan modal kode dan mulai timer.
+         */
+        function showCodeModal(code) {
+            generatedCode = code;
+            codeOutput.textContent = code;
+            
+            codeModal.style.display = 'flex';
+            
+            // Animasi masuk
+            setTimeout(() => {
+                codeModal.classList.remove('modal-leave-to');
+            }, 10);
+            
+            // Auto redirect setelah 2 detik
+            startRedirectTimer(2);
+        }
+
+        /**
+         * Sembunyikan modal kode.
+         */
+        function hideCodeModal() {
+            clearTimeout(timerId);
+            codeModal.classList.add('modal-leave-to');
+            
+            // Tunggu animasi selesai baru sembunyikan display
+            setTimeout(() => {
+                codeModal.style.display = 'none';
+            }, 300);
+        }
+        
+        /**
+         * Memulai timer redirect.
+         */
+        function startRedirectTimer(seconds) {
+            let count = seconds;
+            countdownText.textContent = `Auto-redirect dalam ${count} detik...`;
+
+            const tick = () => {
+                count--;
+                if (count > 0) {
+                    countdownText.textContent = `Auto-redirect dalam ${count} detik...`;
+                    timerId = setTimeout(tick, 1000);
+                } else {
+                    countdownText.textContent = 'Membuka WhatsApp...';
+                    redirectToWa();
+                }
+            };
+
+            timerId = setTimeout(tick, 1000);
+        }
+
+        /**
+         * Redirect ke WhatsApp dengan pesan terenkripsi.
+         */
+        function redirectToWa() {
+            const nama = namaInput.value;
+            const normalizedWa = normalizeAndValidateWa(waInput.value);
+
+            const message = `Halo Admin, saya ingin klaim FREEBET.\nNama: ${nama}\nNomor WA: ${normalizedWa}\nKode: ${generatedCode}`;
+            const waLink = `https://wa.me/${WA_TARGET_NUMBER}?text=${encodeURIComponent(message)}`;
+            
+            showToast('✅ Data tersimpan, membuka WhatsApp...', 'success');
+            // Timeout singkat untuk memastikan toast sempat terlihat
+            setTimeout(() => window.location.href = waLink, 500); 
+            // Tidak perlu hideModal di sini, karena redirect akan mengganti halaman
+        }
+
+        // --- Event Listeners ---
+
+        // 1. Form Submission Handler
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Reset error states
+            namaError.classList.add('hidden');
+            waError.classList.add('hidden');
+            namaInput.classList.remove('shake-error');
+            waInput.classList.remove('shake-error');
+
+            const nama = namaInput.value.trim();
+            const wa = waInput.value.trim();
+
+            // Validation
+            let isValid = true;
+            if (nama.length < 3) {
+                namaError.classList.remove('hidden');
+                namaInput.classList.add('shake-error');
+                isValid = false;
+            }
+
+            const normalizedWa = normalizeAndValidateWa(wa);
+            if (!normalizedWa) {
+                waError.classList.remove('hidden');
+                waInput.classList.add('shake-error');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+
+            setButtonLoading(true);
+
+            try {
+                // Kirim data ke Google Apps Script (GAS) menggunakan application/x-www-form-urlencoded
+                const body = new URLSearchParams({ 
+                    nama: nama, 
+                    wa: normalizedWa 
+                });
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: body,
+                    // Content-Type diatur otomatis oleh browser menjadi application/x-www-form-urlencoded
+                });
+                
+                if (response.ok) {
+                    const code = generateFreebetCode();
+                    showCodeModal(code);
+                } else {
+                    showToast('❌ Gagal terhubung, coba lagi. (Status: ' + response.status + ')', 'error');
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showToast('❌ Gagal terhubung, coba lagi. (Koneksi error)', 'error');
+            } finally {
+                setButtonLoading(false);
+            }
+        });
+
+        // 2. Modal Button Handlers
+        copyCodeBtn.addEventListener('click', () => {
+            if (generatedCode) {
+                // Copy to clipboard menggunakan execCommand
+                const tempInput = document.createElement('textarea');
+                tempInput.value = generatedCode;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Kode berhasil dicopy!', 'success');
+                } catch (err) {
+                    console.error('Gagal menyalin:', err);
+                    showToast('Gagal menyalin kode. Salin manual.', 'error');
+                }
+                document.body.removeChild(tempInput);
+            }
+        });
+
+        redirectWaBtn.addEventListener('click', () => {
+            // Memaksa redirect tanpa menunggu timer
+            clearTimeout(timerId);
+            redirectToWa();
+        });
+
+        // 3. Modal Close/Keyboard Handlers
+        codeModal.addEventListener('click', (e) => {
+            // Tutup jika klik di backdrop
+            if (e.target === codeModal) {
+                hideCodeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && codeModal.style.display === 'flex') {
+                hideCodeModal();
+            }
+        });
+        
+        // 4. Input Focus/Change to clear errors
+        [namaInput, waInput].forEach(input => {
+            input.addEventListener('focus', () => {
+                input.classList.remove('shake-error');
+                const errorId = input.id + '-error';
+                document.getElementById(errorId).classList.add('hidden');
+            });
+            input.addEventListener('input', () => {
+                input.classList.remove('shake-error');
+                const errorId = input.id + '-error';
+                document.getElementById(errorId).classList.add('hidden');
+            });
+        });
+        
+        // --- Particle Grid Animation Logic ---
+        const canvas = document.getElementById('particle-grid');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null };
+        const MAX_DISTANCE = 120; // Jarak maksimum untuk garis
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Re-initialize particles on resize for proper positioning
+            initParticles();
+        }
+
+        // Partikel Class
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 1.5 + 0.5; // Ukuran 0.5 - 2
+                this.baseSpeed = Math.random() * 0.4 + 0.1; // Kecepatan dasar 0.1 - 0.5
+                this.directionX = Math.random() * 2 - 1;
+                this.directionY = Math.random() * 2 - 1;
+                this.color = '#14b8a6'; // Neon Emerald
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                // Pergerakan dasar
+                this.x += this.directionX * this.baseSpeed;
+                this.y += this.directionY * this.baseSpeed;
+
+                // Rebound dari tepi
+                if (this.x > canvas.width || this.x < 0) this.directionX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.directionY *= -1;
+
+                // Interaksi Parallax dengan Mouse (soft attraction/repulsion)
+                if (mouse.x !== null) {
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    const maxInfluence = 150;
+                    const force = 0.005; // Kekuatan Parallax
+                    
+                    if (distance < maxInfluence) {
+                        const angle = Math.atan2(dy, dx);
+                        // Node sedikit menjauh dari kursor
+                        const pushX = Math.cos(angle) * force * (maxInfluence - distance);
+                        const pushY = Math.sin(angle) * force * (maxInfluence - distance);
+
+                        this.x += pushX;
+                        this.y += pushY;
+                    }
+                }
+            }
+        }
+
+        // Inisialisasi Partikel
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                particles.push(new Particle(x, y));
+            }
+        }
+
+        // Menggambar garis penghubung (Particle Grid)
+        function connect() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < MAX_DISTANCE) {
+                        // Opasitas garis fade berdasarkan jarak (0.3 - 0.7)
+                        const opacity = 1 - (distance / MAX_DISTANCE); 
+                        
+                        // Garis tipis dengan gradient
+                        const gradient = ctx.createLinearGradient(particles[a].x, particles[a].y, particles[b].x, particles[b].y);
+                        gradient.addColorStop(0, `rgba(20, 184, 166, ${opacity * 0.3})`); // Neon Emerald, Opasitas rendah
+                        gradient.addColorStop(1, `rgba(6, 182, 212, ${opacity * 0.2})`); // Neon Cyan, Opasitas rendah
+                        
+                        ctx.strokeStyle = gradient;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Loop Animasi Utama dengan requestAnimationFrame
+        function animateGrid() {
+            // Bersihkan canvas dengan transparansi
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            
+            connect(); 
+
+            for (const particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+
+            requestAnimationFrame(animateGrid);
+        }
+        
+        // Event listener untuk mouse (parallax)
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+        
+        // Panggil inisialisasi saat window load
+        window.onload = function () {
+            resizeCanvas();
+            initParticles();
+            animateGrid();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+    </script>
+
+</body>
+</html>
